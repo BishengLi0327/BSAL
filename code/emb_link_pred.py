@@ -8,31 +8,17 @@ from torch_geometric.data import InMemoryDataset
 from torch_geometric.utils import train_test_split_edges, negative_sampling, add_self_loops
 
 
-class HUAWEI_Dataset(InMemoryDataset):
-    def __init__(self):
-        super().__init__()
-        self.data = torch.load('../data/HUAWEI/huawei_graph.pt')
-
-
 def main():
-    # data_name = 'cs'
-    # dataset = load_data(data_name)
-    # data = dataset[0]
-    # train_pos_edge_index, train_neg_edge_index, val_pos_edge_index, val_neg_edge_index, test_pos_edge_index, test_neg_edge_index = load_edges(data_name)
-    # data.train_pos_edge_index = torch.from_numpy(train_pos_edge_index).t()
-    # data.train_neg_edge_index = torch.from_numpy(train_neg_edge_index).t()
-    # data.val_pos_edge_index = torch.from_numpy(val_pos_edge_index).t()
-    # data.val_neg_edge_index = torch.from_numpy(val_neg_edge_index).t()
-    # data.test_pos_edge_index = torch.from_numpy(test_pos_edge_index).t()
-    # data.test_neg_edge_index = torch.from_numpy(test_neg_edge_index).t()
-    # data.edge_index = data.train_pos_edge_index
-    dataset = HUAWEI_Dataset()
+    data_name = 'cs'
+    dataset = load_data(data_name)
     data = dataset[0]
-    data = train_test_split_edges(data, 0.05, 0.10)
-    edge_index, _ = add_self_loops(data.train_pos_edge_index)
-    data.train_neg_edge_index = negative_sampling(
-        edge_index, num_nodes=data.num_nodes,
-        num_neg_samples=data.train_pos_edge_index.size(1))
+    train_pos_edge_index, train_neg_edge_index, val_pos_edge_index, val_neg_edge_index, test_pos_edge_index, test_neg_edge_index = load_edges(data_name)
+    data.train_pos_edge_index = torch.from_numpy(train_pos_edge_index).t()
+    data.train_neg_edge_index = torch.from_numpy(train_neg_edge_index).t()
+    data.val_pos_edge_index = torch.from_numpy(val_pos_edge_index).t()
+    data.val_neg_edge_index = torch.from_numpy(val_neg_edge_index).t()
+    data.test_pos_edge_index = torch.from_numpy(test_pos_edge_index).t()
+    data.test_neg_edge_index = torch.from_numpy(test_neg_edge_index).t()
     data.edge_index = data.train_pos_edge_index
 
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
