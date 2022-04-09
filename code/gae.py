@@ -13,12 +13,6 @@ from torch_geometric.utils import train_test_split_edges, add_self_loops, negati
 from torch_geometric.data import InMemoryDataset
 
 
-class HUAWEI_Dataset(InMemoryDataset):
-    def __init__(self):
-        super().__init__()
-        self.data = torch.load('../data/HUAWEI/huawei_graph.pt')
-
-
 def train(model, data, optimizer):
     model.train()
     optimizer.zero_grad()
@@ -65,24 +59,15 @@ def run():
     args = parser.parse_args()
     print(args)
 
-    # dataset = load_data(args.dataset)
-    # data = dataset[0]
-    # train_pos_edge_index, train_neg_edge_index, val_pos_edge_index, val_neg_edge_index, test_pos_edge_index, test_neg_edge_index = load_edges(args.dataset)
-    # data.train_pos_edge_index = torch.from_numpy(train_pos_edge_index).t()
-    # data.train_neg_edge_index = torch.from_numpy(train_neg_edge_index).t()
-    # data.val_pos_edge_index = torch.from_numpy(val_pos_edge_index).t()
-    # data.val_neg_edge_index = torch.from_numpy(val_neg_edge_index).t()
-    # data.test_pos_edge_index = torch.from_numpy(test_pos_edge_index).t()
-    # data.test_neg_edge_index = torch.from_numpy(test_neg_edge_index).t()
-    # data.edge_index = data.train_pos_edge_index
-    dataset = HUAWEI_Dataset()
+    dataset = load_data(args.dataset)
     data = dataset[0]
-    data.x = torch.randn([data.num_nodes, 240])
-    data = train_test_split_edges(data, 0.05, 0.10)
-    edge_index, _ = add_self_loops(data.train_pos_edge_index)
-    data.train_neg_edge_index = negative_sampling(
-        edge_index, num_nodes=data.num_nodes,
-        num_neg_samples=data.train_pos_edge_index.size(1))
+    train_pos_edge_index, train_neg_edge_index, val_pos_edge_index, val_neg_edge_index, test_pos_edge_index, test_neg_edge_index = load_edges(args.dataset)
+    data.train_pos_edge_index = torch.from_numpy(train_pos_edge_index).t()
+    data.train_neg_edge_index = torch.from_numpy(train_neg_edge_index).t()
+    data.val_pos_edge_index = torch.from_numpy(val_pos_edge_index).t()
+    data.val_neg_edge_index = torch.from_numpy(val_neg_edge_index).t()
+    data.test_pos_edge_index = torch.from_numpy(test_pos_edge_index).t()
+    data.test_neg_edge_index = torch.from_numpy(test_neg_edge_index).t()
     data.edge_index = data.train_pos_edge_index
 
     if args.encoder == 'GCN':
