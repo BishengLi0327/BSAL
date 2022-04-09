@@ -16,19 +16,6 @@ def add_flags_from_config(parser, config_dict):
     return parser
 
 
-# def construct_cos_knn_graph(data):
-#     if (not data.pos) and (data.x is not None):
-#         data.pos = data.x
-#     else:
-#         raise ValueError('No data pos and data features!')
-#     k = int(data.num_edges / data.num_nodes) + 1
-#     edge_index = knn_graph(data.pos, k, batch=None, loop=False, cosine=True)
-#     edge_index = to_undirected(edge_index, num_nodes=data.num_nodes)
-#     data.edge_index = edge_index
-#     data.pos, data.x = None, None
-#     return data
-
-
 def construct_knn_graph(data):
     if (not data.pos) and (data.x is not None):
         data.pos = data.x
@@ -74,36 +61,3 @@ def train_node2vec_emb(data):
     print('=' * 50)
     return model().detach()
 
-
-# def train_cl_emb(data, knn_graph):
-#     pretrained_data = data.clone()
-#     knn_graph.x = data.x
-#
-#     model = Contrastive_Net(data.num_features, knn_graph.x.shape[1], 32)
-#     pretrained_data = pretrained_data
-#     optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=5e-4)
-#     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.8)
-#     min_loss = 1e9
-#     patience = 0
-#     for epoch in range(1, 201):
-#         scheduler.step()
-#         optimizer.zero_grad()
-#         res = model(pretrained_data, knn_graph).view(-1)
-#         lbls = torch.eye(knn_graph.num_nodes).view(-1)
-#         loss = torch.nn.BCEWithLogitsLoss()(res, lbls)
-#         loss.backward()
-#         optimizer.step()
-#         if loss < min_loss:
-#             min_loss = loss
-#             patience = 0
-#         else:
-#             patience += 1
-#         if patience >= 10:
-#             print('Early Stop...')
-#             break
-#         print(f'Epoch: {epoch:3d}, Loss: {loss:.4f}')
-#
-#     emb_1 = model.model_topo.encode(pretrained_data.x, pretrained_data.edge_index).detach()
-#     emb_2 = model.model_feat(knn_graph.x, knn_graph.edge_index).detach()
-#
-#     return (emb_1 + emb_2) / 2
