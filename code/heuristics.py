@@ -16,12 +16,6 @@ from utils.data_utils import load_data
 from utils.split_edges import load_edges
 
 
-class HUAWEI_Dataset(InMemoryDataset):
-    def __init__(self):
-        super().__init__()
-        self.data = torch.load('../data/HUAWEI/huawei_graph.pt')
-
-
 def do_edge_split(dataset, fast_split=False, val_ratio=0.05, test_ratio=0.1):
     data = dataset[0]
     random.seed(2)
@@ -228,30 +222,25 @@ parser.add_argument('--batch_size', type=int, default=32)
 parser.add_argument('--use_heuristic', type=str, default='PPR', help="test a link prediction heuristic (CN or AA)")
 args = parser.parse_args()
 
-# path = osp.join('../data', args.dataset.upper())
-dataset = HUAWEI_Dataset()
-split_edge = do_edge_split(dataset, args.fast_split)
+dataset = load_data(args.dataset)
 data = dataset[0]
-data.edge_index = split_edge['train']['edge'].t()
-# dataset = load_data(args.dataset)
-# data = dataset[0]
-# train_pos_edge_index, train_neg_edge_index, val_pos_edge_index, val_neg_edge_index, test_pos_edge_index, test_neg_edge_index = load_edges(
-#     args.dataset)
-# data.train_pos_edge_index = torch.from_numpy(train_pos_edge_index).t()
-# data.train_neg_edge_index = torch.from_numpy(train_neg_edge_index).t()
-# data.val_pos_edge_index = torch.from_numpy(val_pos_edge_index).t()
-# data.val_neg_edge_index = torch.from_numpy(val_neg_edge_index).t()
-# data.test_pos_edge_index = torch.from_numpy(test_pos_edge_index).t()
-# data.test_neg_edge_index = torch.from_numpy(test_neg_edge_index).t()
-# data.edge_index = data.train_pos_edge_index
-#
-# split_edge = {'train': {}, 'valid': {}, 'test': {}}
-# split_edge['train']['edge'] = data.train_pos_edge_index.t()
-# split_edge['train']['edge_neg'] = data.train_neg_edge_index.t()
-# split_edge['valid']['edge'] = data.val_pos_edge_index.t()
-# split_edge['valid']['edge_neg'] = data.val_neg_edge_index.t()
-# split_edge['test']['edge'] = data.test_pos_edge_index.t()
-# split_edge['test']['edge_neg'] = data.test_neg_edge_index.t()
+train_pos_edge_index, train_neg_edge_index, val_pos_edge_index, val_neg_edge_index, test_pos_edge_index, test_neg_edge_index = load_edges(
+    args.dataset)
+data.train_pos_edge_index = torch.from_numpy(train_pos_edge_index).t()
+data.train_neg_edge_index = torch.from_numpy(train_neg_edge_index).t()
+data.val_pos_edge_index = torch.from_numpy(val_pos_edge_index).t()
+data.val_neg_edge_index = torch.from_numpy(val_neg_edge_index).t()
+data.test_pos_edge_index = torch.from_numpy(test_pos_edge_index).t()
+data.test_neg_edge_index = torch.from_numpy(test_neg_edge_index).t()
+data.edge_index = data.train_pos_edge_index
+
+split_edge = {'train': {}, 'valid': {}, 'test': {}}
+split_edge['train']['edge'] = data.train_pos_edge_index.t()
+split_edge['train']['edge_neg'] = data.train_neg_edge_index.t()
+split_edge['valid']['edge'] = data.val_pos_edge_index.t()
+split_edge['valid']['edge_neg'] = data.val_neg_edge_index.t()
+split_edge['test']['edge'] = data.test_pos_edge_index.t()
+split_edge['test']['edge_neg'] = data.test_neg_edge_index.t()
 
 # Test link prediction heuristics.
 num_nodes = data.num_nodes
