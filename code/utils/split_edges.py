@@ -33,7 +33,7 @@ def get_split_edges(dataset, args):
     test_pos_edge_index = test_edges[: int(num_edges/2)]
     test_neg_edge_index = test_edges[int(num_edges/2):]
 
-    save_dir = osp.join('/root/libisheng/BSAL/data/Split_Edges', dataset)
+    save_dir = osp.join('../../data/Split_Edges', dataset)
     if not osp.isdir(save_dir):
         os.mkdir(save_dir)
     np.save(osp.join(save_dir, 'train_pos_edges.npy'), train_pos_edge_index)
@@ -45,7 +45,7 @@ def get_split_edges(dataset, args):
 
 
 def load_edges(dataset):
-    save_dir = osp.join('/root/libisheng/BSAL/data/Split_Edges', dataset)
+    save_dir = osp.join('../../data/Split_Edges', dataset)
     train_pos_edge_index = np.load(osp.join(save_dir, 'train_pos_edges.npy'))
     train_neg_edge_index = np.load(osp.join(save_dir, 'train_neg_edges.npy'))
     val_pos_edge_index = np.load(osp.join(save_dir, 'val_pos_edges.npy'))
