@@ -45,5 +45,16 @@ The BSAL code is contained in the code dir and the data are downloaded and store
 ## Reference:
 If you find the code useful, please cite our paper:
 ```bash
-....
+@inproceedings{10.1145/3477495.3531804,
+author = {Li, Bisheng and Zhou, Min and Zhang, Shengzhong and Yang, Menglin and Lian, Defu and Huang, Zengfeng},
+title = {BSAL: A Framework of Bi-Component Structure and Attribute Learning for Link Prediction},
+year = {2022},
+isbn = {9781450387323},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3477495.3531804},
+doi = {10.1145/3477495.3531804},
+location = {Madrid, Spain},
+series = {SIGIR '22}
+}
 ```
